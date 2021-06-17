@@ -4,11 +4,22 @@ class Recipe < ApplicationRecord
   has_many :ingredient_recipes
   # has_many :ingredients, through :ingredient_recipes
 
-  # after_save :maintain_ingredient_recipe_table
+  after_save :maintain_ingredient_recipe_table
 
-  # def maintain_ingredient_recipe_table
-  #   previous_ingredient_ids = ingredient_recipes.all.map(&:ingredients)
-  #   current_ingredient_ids = ingredients.map()
+  def self.search(search)
+    if search
+      ingredient = Ingredient.find_by(ingredient: search)
+      if ingredient
+        IngredientRecipe.where(ingredient_id: ingredient)
+      end
+    end
+  end
 
-  # end
+  def maintain_ingredient_recipe_table
+    new_ingredient_recipe = IngredientRecipe.new(
+      ingredient_id: ingredient.id,
+      recipe_id: id,
+    )
+    new_ingredient_recipe.save!
+  end
 end

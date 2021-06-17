@@ -4,13 +4,17 @@
 <br>
 
 <h3>Pick an ingredient</h3>
-<p>
-<select style="width: 200px;">
-  <option> Select one</option>  
-  # <option value = "i"> Select one</option>
-</select>
-</p>
-<br>
+# <% form_tag(ingredients_path, method: :get) do %>
+#   <%= text_field_tag(:search, params[:search]) %>
+#   <%= submit_tag("Search") %>
+# <% end %>
+
+# <select style="width: 200px;">
+#   <option> Select one</option>  
+#   # <option value = "i"> Select one</option>
+# </select>
+# </p>
+# <br>
 
 <table>
   <thead>
