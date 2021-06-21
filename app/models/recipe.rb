@@ -2,17 +2,20 @@ class Recipe < ApplicationRecord
   # validates: recipe, length: {maximum: 100}, presence: true
 
   has_many :ingredient_recipes
-  # has_many :ingredients, through :ingredient_recipes
+  has_many :ingredients, :through => :ingredient_recipes
 
   after_save :maintain_ingredient_recipe_table
 
-  def self.search(search)
-    if search
-      ingredient = Ingredient.find_by(ingredient: search)
-      if ingredient
-        IngredientRecipe.where(ingredient_id: ingredient)
-      end
-    end
+  def self.search(ingredient_id)
+    ingredient_recipes = IngredientRecipe.joins(:ingredient).where(ingredient_id = ingredient_id)
+    recipe_ids = ingredient_recipes.map { |i_r| i_r['recipe_id']}
+    Recipe.find(recipe_ids)
+    # if search
+    #   ingredient = Ingredient.find_by(ingredient: search)
+    #   if ingredient
+    #     IngredientRecipe.where(ingredient_id: ingredient)
+    #   end
+    # end
   end
 
   def maintain_ingredient_recipe_table
