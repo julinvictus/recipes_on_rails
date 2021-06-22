@@ -3,7 +3,8 @@ class IngredientsController < ApplicationController
 
   # GET /ingredients or /ingredients.json
   def index
-    @ingredients = Ingredient.where(["ingredient LIKE ?","%#{params[:search]}%"])
+    @ingredients = Ingredient.all
+    # @ingredients = Ingredient.where(["ingredient LIKE ?","%#{params[:search]}%"])
   end
 
   # GET /ingredients/1 or /ingredients/1.json

@@ -4,10 +4,12 @@
 <br>
 
 <h3>Pick an ingredient</h3>
-<%= form_tag ingredients_path, :method => 'get' do %>
-  <%= text_field_tag :search, params[:search] %>
-  <%= submit_tag "Search" %>
+<% @ingredients.each do |ingredient| %>
+  <tr>
+    <td><a href=""><%= ingredient.ingredient %></a></td>
+  </tr>
 <% end %>
+
 <br>
 <br>
 <br>
