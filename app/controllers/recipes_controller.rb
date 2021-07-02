@@ -22,20 +22,29 @@ class RecipesController < ApplicationController
 
   # POST /recipes or /recipes.json
   def create
-    # byebug
-    @recipe = Recipe.new(trusted_params)
+    @recipe = Recipe.find_or_create_by(trusted_params)
+    @recipe.save!
+    # add Ingredient.exists? (like scenario_geo_layers)
+    @ingredient = Ingredient.find_or_create_by(ingredient: params[:recipe][:ingredient])
+    # @ingredient.save!
 
-    @ingredient = Ingredient.find_or_create_by(ingredient: ingredient_params)
+    new_ingredient_recipe = IngredientRecipe.new(
+      ingredient_id: @ingredient.id,
+      recipe_id: @recipe.id,
+    )
+    new_ingredient_recipe.save!
 
-    respond_to do |format|
-      if @recipe.save
-        format.html { redirect_to @recipe, notice: "Recipe was successfully created." }
-        format.json { render :show, status: :created, location: @recipe }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @recipe.errors, status: :unprocessable_entity }
-      end
-    end
+    # respond_to do |format|
+    #   if @recipe.save
+
+    redirect_to @recipe, notice: "Recipe was successfully created."
+
+    #     format.json { render :show, status: :created, location: @recipe }
+    #   else
+    #     format.html { render :new, status: :unprocessable_entity }
+    #     format.json { render json: @recipe.errors, status: :unprocessable_entity }
+    #   end
+    # end
   end
 
   # PATCH/PUT /recipes/1 or /recipes/1.json
@@ -69,6 +78,6 @@ class RecipesController < ApplicationController
     # Only allow a list of trusted parameters through.
     def trusted_params
       # byebug
-      params.require(:recipe).permit(:recipe_url, :name, ingredient_attributes: [:ingredient])
+      params.require(:recipe).permit(:recipe_url, :name)
     end
 end
