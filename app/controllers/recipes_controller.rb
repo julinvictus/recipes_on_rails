@@ -22,51 +22,37 @@ class RecipesController < ApplicationController
 
   # POST /recipes or /recipes.json
   def create
-    @recipe = Recipe.find_or_create_by(trusted_params)
-    @recipe.save!
-    # add Ingredient.exists? (like scenario_geo_layers)
-    @ingredient = Ingredient.find_or_create_by(ingredient: params[:recipe][:ingredient])
-    # @ingredient.save!
+    begin
+      ActiveRecord::Base.transaction do
+        @recipe = Recipe.find_or_create_by!(trusted_params)
+        @ingredient = Ingredient.find_or_create_by!(ingredient: params[:recipe][:ingredient])
 
-    new_ingredient_recipe = IngredientRecipe.new(
-      ingredient_id: @ingredient.id,
-      recipe_id: @recipe.id,
-    )
-    new_ingredient_recipe.save!
-
-    # respond_to do |format|
-    #   if @recipe.save
-
-    redirect_to @recipe, notice: "Recipe was successfully created."
-
-    #     format.json { render :show, status: :created, location: @recipe }
-    #   else
-    #     format.html { render :new, status: :unprocessable_entity }
-    #     format.json { render json: @recipe.errors, status: :unprocessable_entity }
-    #   end
-    # end
+        new_ingredient_recipe = IngredientRecipe.new(
+          ingredient_id: @ingredient.id,
+          recipe_id: @recipe.id,
+        )
+        new_ingredient_recipe.save!
+  
+        redirect_to @recipe, notice: "Recipe was successfully created."
+      end
+    rescue
+      render :new, status: :unprocessable_entity
+    end
   end
 
   # PATCH/PUT /recipes/1 or /recipes/1.json
   def update
-    respond_to do |format|
-      if @recipe.update(recipe_params)
-        format.html { redirect_to @recipe, notice: "Recipe was successfully updated." }
-        format.json { render :show, status: :ok, location: @recipe }
-      else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @recipe.errors, status: :unprocessable_entity }
-      end
+    if @recipe.update(recipe_params)
+      redirect_to @recipe, notice: "Recipe was successfully updated."
+    else
+      render :edit, status: :unprocessable_entity
     end
   end
 
   # DELETE /recipes/1 or /recipes/1.json
   def destroy
     @recipe.destroy
-    respond_to do |format|
-      format.html { redirect_to recipes_url, notice: "Recipe was successfully destroyed." }
-      format.json { head :no_content }
-    end
+    redirect_to recipes_url, notice: "Recipe was successfully destroyed."
   end
 
   private
@@ -77,7 +63,6 @@ class RecipesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def trusted_params
-      # byebug
       params.require(:recipe).permit(:recipe_url, :name)
     end
 end
