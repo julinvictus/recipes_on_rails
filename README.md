@@ -1,24 +1,26 @@
-# README
+# 🥙 Cook with what you have
+a.k.a Recipes on Rails
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Add your favorite recipes!
 
-Things you may want to cover:
+Find recipes with ingredients you have at home!
 
-* Ruby version
+Project in Ruby on Rails
 
-* System dependencies
+## 🚀 Deployed at:
+https://lit-ridge-63372.herokuapp.com/
 
-* Configuration
+## ✅ How to set up:
+Create a fork of this repository.
 
-* Database creation
+Clone the repository locally to your computer.
 
-* Database initialization
+In that directory, run `rails s`
 
-* How to run the test suite
+In your browser, go to `http://localhost:3000/`
 
-* Services (job queues, cache servers, search engines, etc.)
+## 🔴 Ruby version:
+'3.0.1'
 
-* Deployment instructions
-
-* ...
+## 🛢 Database:
+PostGres
